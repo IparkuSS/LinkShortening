@@ -15,7 +15,14 @@ builder.Services.AddSingleton<ILinkShorteningDatabaseSettings>(sp =>
 
 builder.Services.AddScoped<ILinksService, LinksService>();
 
-builder.Services.AddControllers();
+builder.Services.Configure<LinkShorteningDatabaseSettings>(
+    builder.Configuration.GetSection("LinkShortening"));
+
+builder.Services.AddSingleton<LinksService>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(
+        options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

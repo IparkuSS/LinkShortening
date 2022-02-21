@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkShortening", "LinkShortening\LinkShortening.csproj", "{6709A1B8-DCDA-4DE1-96F3-B2ABE5356779}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Tests", "BookStore.Tests\BookStore.Tests.csproj", "{239EEC4F-6D29-4DD2-A71C-A80972173548}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Tests", "BookStore.Tests\BookStore.Tests.csproj", "{239EEC4F-6D29-4DD2-A71C-A80972173548}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerService", "LoggerService\LoggerService.csproj", "{61C5301D-8618-46B2-B3EA-74423CF36EDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{239EEC4F-6D29-4DD2-A71C-A80972173548}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{239EEC4F-6D29-4DD2-A71C-A80972173548}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{239EEC4F-6D29-4DD2-A71C-A80972173548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61C5301D-8618-46B2-B3EA-74423CF36EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61C5301D-8618-46B2-B3EA-74423CF36EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61C5301D-8618-46B2-B3EA-74423CF36EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61C5301D-8618-46B2-B3EA-74423CF36EDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

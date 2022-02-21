@@ -7,7 +7,7 @@ namespace LinkShortening.Settings
         public string ConnectionString { get; set; }
 
         public string DatabaseName { get; set; }
-
-        public string LinksCollectionName { get; set; }
+        public string LinksCollectionNameUrl { get; set; }
+        public string LinksCollectionNameUsers { get; set; }//recheck
     }
 }

@@ -26,7 +26,11 @@ namespace LinkShortening.Models
         public string? Segment { get; set; }
 
         [BsonElement("UserId")]
-        [JsonPropertyName("UserId ")]//recheck
+        [JsonPropertyName("UserId")]
         public string? UserId { get; set; }
+
+        [BsonElement("Incognito")]
+        [JsonPropertyName("Incognito")]
+        public bool? Incognito { get; set; }
     }
 }

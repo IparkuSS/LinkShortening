@@ -6,7 +6,7 @@ namespace LinkShortening.Services.Contracts
     {
         public Task<User> GerUserAsync(string id);
 
-        public Task CreateAsync(User newUser);
+        public Task<User> CreateAsync();
 
         public string Authorization(string password, string userName);
     }

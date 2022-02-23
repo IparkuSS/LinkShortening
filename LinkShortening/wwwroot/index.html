@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Links Shorting</title>
+</head>
+<body>
+    <label id="url1"></label>
+
+    <div id="userInfo" style="display: none;">
+        User name : <label id="userName"></label><br>
+        incognito : <label id="inc"></label>
+
+        <input type="button" value="out" id="logOut" />
+    </div>
+
+    <div id="loginForm">
+        <p>
+            <label>Input user name</label><br />
+            <input type="email" id="email" />
+        </p>
+        <p>
+            <label>Input pass</label><br />
+            <input type="password" id="password" />
+        </p>
+        <p>
+            <label>incognito</label><br />
+            <input type="checkbox" id="checkbox1" />
+        </p>
+        <input type="submit" id="submitLogin" value="Login" />
+        <button id="reg">registration</button>
+        <label id="RegUser"></label> <br>
+        <label id="RegPass"></label>
+    </div>
+
+    <div id="urlForm">
+        <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
+            <input type="text" id="add-name" placeholder="pleasy input LONGurl">
+            <button id="encode">submit</button>
+        </form>
+        <form action="javascript:void(0);" method="POST" onsubmit="GetItem()">
+            <input type="text" id="long" placeholder="pleasy input SHORTurl">
+            <button id="execk">submit</button>
+        </form>
+        <label id="url2"></label>
+        <table id="apiTable">
+            <thead>
+                <tr>
+                    <th>LongUrl</th>
+                    <th>ShortUrl</th>
+                    <th>NumOfClicks</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+    </div>
+
+    <script>
+        var tokenKey = "accessToken";
+        document.getElementById("urlForm").style.display = "none";
+        document.getElementById("submitLogin").addEventListener("click",
+            async e => {
+                e.preventDefault();
+
+
+                var checkbox = document.getElementById("checkbox1");
+
+                const response = await fetch("api/user",
+                    {
+                        method: "POST",
+                        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            UserName: document.getElementById("email").value,
+                            Password: document.getElementById("password").value,
+                            Incognito: checkbox.checked
+                        })
+                    });
+                if (response.ok === true) {
+                    const data = await response.json();
+                    document.getElementById("userName").innerText = data.user;
+                    document.getElementById("inc").innerText = data.incog;
+                    document.getElementById("userInfo").style.display = "block";
+                    document.getElementById("loginForm").style.display = "none";
+
+                    document.getElementById("urlForm").style.display = "block";
+
+
+
+
+                    sessionStorage.setItem(tokenKey, data.token);
+                    var user = data.user;
+
+                    ShowAllReservation(user);
+                } else
+                    console.log("Status: ", response.status);
+            });
+
+
+        document.getElementById("logOut").addEventListener("click",
+            e => {
+
+                e.preventDefault();
+                document.getElementById("userName").innerText = "";
+                document.getElementById("userInfo").style.display = "none";
+                document.getElementById("loginForm").style.display = "block";
+                document.getElementById("urlForm").style.display = "none";
+                sessionStorage.removeItem(tokenKey);
+            });
+
+
+        function ShowAllReservation(user) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "api/url/urls/" + user, true);
+            xhttp.send();
+
+            xhttp.onreadystatechange = function () {
+                var tbody = document.getElementById("apiTable").querySelector("tbody");
+                tbody.innerHTML = "";
+                if (this.readyState == 4 && this.status == 200) {
+                    JSON.parse(this.responseText).forEach(function (data, index) {
+                        tbody.innerHTML += "<tr> <td>" + data.LongURL + "</td> <td>" + data.ShortURL + "</td> <td>" + data.NumOfClicks + "</td> </tr>";
+                    });
+                }
+            };
+        }
+
+        reg.onclick = async (e) => {
+            e.preventDefault();
+            const response = await fetch('api/user/registration',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+
+                    },
+
+
+                });
+            if (response.ok === true) {
+                const data = await response.json();
+                document.getElementById("RegUser").innerText = data.userName;
+                document.getElementById("RegPass").innerText = data.password;
+            }
+
+        }
+
+        execk.onclick = async (e) => {
+            e.preventDefault();
+            var LongURL = document.getElementById('long').value;
+            var addName1 = document.getElementById('userName').innerHTML;
+
+            const token = sessionStorage.getItem(tokenKey);
+            const response = await fetch('api/url/long/' + addName1,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify(LongURL)
+
+                });
+            if (response.ok === true) {
+                const data = await response.json();
+                document.getElementById("url2").innerText = data.longUr;
+            }
+        }
+
+        encode.onclick = async (e) => {
+            e.preventDefault();
+            var addNameTextbox = document.getElementById('add-name').value;
+            var addName1 = document.getElementById('userName').innerHTML;
+            var incog = document.getElementById('inc').innerHTML;
+            var boolTrue = false;
+            var tempTrue = 'true';
+            if (incog == tempTrue) {
+                boolTrue = new Boolean(true);
+            } else {
+                boolTrue = new Boolean(false);
+            }
+            const item = {
+                "id": "string",
+                "LongURL": addNameTextbox,
+                "ShortURL": "string",
+                "Ip": "string",
+                "NumOfClicks": 0,
+                "Segment": "string",
+                "UserId": addName1,
+                "Incognito": boolTrue
+            };
+            const token = sessionStorage.getItem(tokenKey);
+            const response = await fetch('api/url',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify(item)
+
+                });
+            if (response.ok === true) {
+                const data = await response.json();
+                document.getElementById("url1").innerText = data.urlShortUrl;
+            }
+            ShowAllReservation(addName1);
+        }
+    </script>
+</body>
+</html>

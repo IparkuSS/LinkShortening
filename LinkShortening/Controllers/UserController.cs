@@ -6,10 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LinkShortening.Controllers
 {
-    /*[Authorize]*/
     [Route("api/user")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : Controller
     {
         private readonly IUserServices _userServices;
         private readonly ILoggerManager _logger;
@@ -20,42 +19,40 @@ namespace LinkShortening.Controllers
             _userServices = userServices;
         }
 
-        /*     /// <summary>
-             /// 
-             /// </summary>
-             /// <param name="user"></param>
-             /// <returns></returns>
-             [AllowAnonymous]
-             [HttpPost]
-             [ProducesResponseType(StatusCodes.Status201Created)]
-             public async Task<ActionResult> Registration([FromBody] User user)
-             {
-                 await _userServices.CreateAsync(user);
-                 return Ok();
-             }*/
-
         /// <summary>
-        /// 
+        /// method registers the user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
         [AllowAnonymous]
+        [Route("registration")]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult Login([FromBody] User user)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> Registration()
         {
-            var token = _userServices.Authorization(user.Password, user.UserName);
-            if (token == null)
-                return Unauthorized();
-            var userToJs = user.UserName;
-            return Ok(new { token, userToJs });
-            /*      var resultAuthorization =  _userServices.Authorization(user.Password, user.UserName);
-                  if (resultAuthorization == null)
-                      return this.RedirectPermanent("d");
-                  return this.RedirectPermanent("b");*/
 
+            var user = await _userServices.CreateAsync();
+            var userName = user.UserName;
+            var password = user.Password;
+            return Ok(new { userName, password });
         }
 
-
+        /// <summary>
+        /// the method authorizes and issues a token
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public ActionResult Login([FromBody] User userAuteres)
+        {
+            var token = _userServices.Authorization(userAuteres.Password, userAuteres.UserName);
+            if (token == null)
+                return Unauthorized();
+            var user = userAuteres.UserName;
+            var incog = userAuteres.Incognito;
+            return Ok(new { token, user, incog });
+        }
     }
 }
